@@ -43,11 +43,12 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 	private int currentScreen;
 	private boolean Start;
 	
+	private int GAME_SCREEN = 0;
 	private int HIGH_SCORE = 1;
 	private int PAUSE = 2;
 	private int GAME_OVER = 3;
 	boolean AudioOn;
-	boolean isPaused = false;
+	boolean isPaused = true;
 	boolean isNewGame;
 	
 	Canvas canvas;
@@ -76,10 +77,11 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 	
 	int NPC1_previous_State;
 	int NPC3_previous_State;
-	
+	int NPC5_previous_State;
 	
 	//NPC 6 7 8 9
 	boolean isWalkingLeft;
+	boolean isSideNpcIdle;
 	
 	//NPC 1 2
 	boolean isFacingLeft;
@@ -403,7 +405,7 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 			if(currentScreen == HIGH_SCORE)
 			{
 				Start = true;
-				currentScreen = 0;
+				currentScreen = GAME_SCREEN;
 			}
 					
 			return( super.onTouchEvent(event) );
@@ -446,6 +448,7 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 		
 		}
 		
+		
 		public void beginRun() {
 			Log.v( this.getClass().getName(), "public void resume()" );
 
@@ -484,16 +487,13 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 			currentScreen = HIGH_SCORE;
 			
 			audioBg.playFromRes(getResources().openRawResourceFd(R.raw.background));	
-			audioBg.Looping(true);	
-			
-			
+			audioBg.Looping(true);			
 			
 			btnPlay = new Sprite();
 			btnPlay.setImage(BitmapFactory.decodeResource( context.getResources(), R.drawable.btnpause ));
 			
 			audioOn = new Sprite();
-			audioOn.setImage(BitmapFactory.decodeResource( context.getResources(), R.drawable.audion ));
-				
+			audioOn.setImage(BitmapFactory.decodeResource( context.getResources(), R.drawable.audion ));			
 										
 			
 			Npc1 = new Sprite();
@@ -616,16 +616,13 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 			timer2 = System.currentTimeMillis();
 			timer3 = System.currentTimeMillis();
 			
-			 npc1State = NPC_STATE_FACING_DOWN;
-			 npc3State = NPC_STATE_FACING_TOP;
-			 npc5State = NPC_STATE_FACING_TOP;
-			 
-			 NPC1_previous_State = NPC_STATE_FACING_LEFT;
-			 NPC3_previous_State = NPC_STATE_FACING_RIGHT;
-			 
 			
+			 npc1State = NPC_STATE_IDLE;
+			 npc3State = NPC_STATE_IDLE;
+			 npc5State = NPC_STATE_IDLE;
 			 
-			 
+			 isSideNpcIdle = true;	
+			  
 		}
 		
 		class Game1Thread extends Thread 
@@ -1051,7 +1048,9 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 				{
 					if (pressed)
 					{						
-						
+							isPaused = false;
+							isSideNpcIdle = false;													 
+														 
 							mousePos.setX(mousePos.getX());
 							mousePos.setY(mousePos.getY());
 							
@@ -1093,7 +1092,7 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 			                Player.setVelocity(1.0f,1.0f);
 			              
 			            }				
-					 
+					
 			        UpdateNpc();
 			        
 			        if (IsColliding(Player, Exit))
@@ -1116,7 +1115,7 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 	                {
 	                	GameOver = new Sprite();    	   	
 	        			GameOver.setImage(BitmapFactory.decodeResource( context.getResources(), R.drawable.gameover ));
-	        			
+	        			isPaused = false;	        			
 	                	
 	                	if (pressed)
 	                	{
@@ -1133,18 +1132,25 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 	               
 	                }
 	                if (isPaused)
-	                {
-	                	
-	                	Pause = new Sprite();
-	        			Pause.setImage(BitmapFactory.decodeResource( context.getResources(), R.drawable.pausa ));
-	                	pressed = false;
-	                	Start = false;
-						audioBg.stop();
-	                	if (pressed)
-	                	{
-	                		isPaused = false;
-	                		Pause = null;
-	                	}
+	                {	
+	                	    Pause = new Sprite();
+	                		Pause.setImage(BitmapFactory.decodeResource( context.getResources(), R.drawable.pausa ));
+		                	pressed = false;
+		                	Start = false;
+							audioBg.stop();
+							npc1State = NPC_STATE_IDLE;
+							
+							npc3State = NPC_STATE_IDLE;
+							
+							npc5State = NPC_STATE_IDLE;
+							
+							isSideNpcIdle = true;
+						
+	                		if (pressed)
+	                		{
+	                			isPaused = false;
+	                			Pause = null;
+	                		}	                	
 	                } 
 	            }
 							
@@ -1164,43 +1170,47 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 
 
 		private void UpdateNpc() 
-		{				
-			
-			if (isWalkingLeft)
+		{
+			if (!isSideNpcIdle)
 			{
-				Npc8.setPosition(Npc8.getPositionX() - NPC_VELOCITY, Npc8.getPositionY()); 
-            	NpcFov8.setPosition(Npc8.getPositionX() - NpcFov8.getWidth(), Npc8.getPositionY());
-    			Npc9.setPosition(Npc9.getPositionX() - NPC_VELOCITY, Npc9.getPositionY());
-    			NpcFov9.setPosition(Npc9.getPositionX() - NpcFov9.getWidth(), Npc9.getPositionY());
-    			
-    			Npc6.setPosition(Npc6.getPositionX() + NPC_VELOCITY, Npc6.getPositionY()); 
-            	NpcFov6.setPosition(Npc6.getPositionX() + Npc6.getWidth(), Npc6.getPositionY());
-    			Npc7.setPosition(Npc6.getPositionX() + NPC_VELOCITY, Npc7.getPositionY());
-    			NpcFov7.setPosition(Npc7.getPositionX() + Npc7.getWidth(), Npc7.getPositionY()); 
-    			
-    			if (Npc6.getPositionX()  >= getWidth() - Npc6.getWidth() && Npc8.getPositionX() <= 0)
-    			{
-    				isWalkingLeft = false;
-    			}    			
-			}			
-			else
-			{
-				Npc8.setPosition(Npc8.getPositionX() + NPC_VELOCITY, Npc8.getPositionY()); 
-            	NpcFov8.setPosition(Npc8.getPositionX() + Npc8.getWidth(), Npc8.getPositionY());
-    			Npc9.setPosition(Npc9.getPositionX() + NPC_VELOCITY, Npc9.getPositionY());
-    			NpcFov9.setPosition(Npc9.getPositionX() + Npc9.getWidth(), Npc9.getPositionY());
-    			
-    			Npc6.setPosition(Npc6.getPositionX() - NPC_VELOCITY, Npc6.getPositionY()); 
-            	NpcFov6.setPosition(Npc6.getPositionX() - NpcFov6.getWidth(), Npc6.getPositionY());
-    			Npc7.setPosition(Npc6.getPositionX() - NPC_VELOCITY, Npc7.getPositionY());
-    			NpcFov7.setPosition(Npc7.getPositionX() - NpcFov7.getWidth(), Npc7.getPositionY()); 
-    			
-    			if (Npc6.getPositionX() <= 0 && Npc8.getPositionX() >= getWidth() - Npc8.getWidth())
-    			{
-    				isWalkingLeft = true;    				
-    			}	                           
-				
+				if (isWalkingLeft)
+				{
+					Npc8.setPosition(Npc8.getPositionX() - NPC_VELOCITY, Npc8.getPositionY()); 
+	            	NpcFov8.setPosition(Npc8.getPositionX() - NpcFov8.getWidth(), Npc8.getPositionY());
+	    			Npc9.setPosition(Npc9.getPositionX() - NPC_VELOCITY, Npc9.getPositionY());
+	    			NpcFov9.setPosition(Npc9.getPositionX() - NpcFov9.getWidth(), Npc9.getPositionY());
+	    			
+	    			Npc6.setPosition(Npc6.getPositionX() + NPC_VELOCITY, Npc6.getPositionY()); 
+	            	NpcFov6.setPosition(Npc6.getPositionX() + Npc6.getWidth(), Npc6.getPositionY());
+	    			Npc7.setPosition(Npc6.getPositionX() + NPC_VELOCITY, Npc7.getPositionY());
+	    			NpcFov7.setPosition(Npc7.getPositionX() + Npc7.getWidth(), Npc7.getPositionY()); 
+	    			
+	    			if (Npc6.getPositionX()  >= getWidth() - Npc6.getWidth() && Npc8.getPositionX() <= 0)
+	    			{
+	    				isWalkingLeft = false;
+	    			}    			
+				}			
+				else
+				{
+					Npc8.setPosition(Npc8.getPositionX() + NPC_VELOCITY, Npc8.getPositionY()); 
+	            	NpcFov8.setPosition(Npc8.getPositionX() + Npc8.getWidth(), Npc8.getPositionY());
+	    			Npc9.setPosition(Npc9.getPositionX() + NPC_VELOCITY, Npc9.getPositionY());
+	    			NpcFov9.setPosition(Npc9.getPositionX() + Npc9.getWidth(), Npc9.getPositionY());
+	    			
+	    			Npc6.setPosition(Npc6.getPositionX() - NPC_VELOCITY, Npc6.getPositionY()); 
+	            	NpcFov6.setPosition(Npc6.getPositionX() - NpcFov6.getWidth(), Npc6.getPositionY());
+	    			Npc7.setPosition(Npc6.getPositionX() - NPC_VELOCITY, Npc7.getPositionY());
+	    			NpcFov7.setPosition(Npc7.getPositionX() - NpcFov7.getWidth(), Npc7.getPositionY()); 
+	    			
+	    			if (Npc6.getPositionX() <= 0 && Npc8.getPositionX() >= getWidth() - Npc8.getWidth())
+	    			{
+	    				isWalkingLeft = true;    				
+	    			}	                           
+					
+				}
 			}
+			
+			
 			//NPC 1 e 2
 			if (isFacingBottom)
 			{				
@@ -1262,29 +1272,36 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 			 
 			else if (isFacingBottom2)
 			{				
-				NpcFov5.setPosition(Npc5.getPositionX(), Npc5.getPositionY() + Npc5.getHeight());
-						
+				NpcFov5.setPosition(Npc5.getPositionX(), Npc5.getPositionY() + Npc5.getHeight());						
 			}
 			 
 			 
 			 switch (npc1State)
 	            {
 	                case NPC_STATE_IDLE:
-	                    break;
+	                	if (pressed)
+	                	{
+	                		if (  System.currentTimeMillis() - timer > NPC_FACING_TIME)
+	                		{
+	                			npc1State = NPC_STATE_FACING_LEFT;
+	                			NPC1_previous_State = NPC_STATE_FACING_DOWN;
+	                			isFacingBottom = false;
+	                			isFacingLeft = true;
+	                			timer = System.currentTimeMillis();}
+	                		}
+	                	break;
 
 	                case NPC_STATE_FACING_DOWN:	                	
 	                	
 	        			if (  System.currentTimeMillis() - timer > NPC_FACING_TIME)
 	        			{	        				
-	        				
 	        				if (NPC1_previous_State == NPC_STATE_FACING_LEFT)
 	        				{
 	        					npc1State = NPC_STATE_FACING_RIGHT;
 	        					isFacingRight = true;
 	        					isFacingBottom = false;
 	        					timer = System.currentTimeMillis();
-	        				}
-	        				
+	        				}       				
 	        				else if (NPC1_previous_State == NPC_STATE_FACING_RIGHT)
 	        				{
 	        					npc1State = NPC_STATE_FACING_LEFT;
@@ -1292,6 +1309,8 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 	        					isFacingBottom = false;
 	        					timer = System.currentTimeMillis();
 	        				}
+	        				
+	        				
 	        			}	                
 	                   
 	                    break;
@@ -1338,6 +1357,16 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 			 switch (npc3State)
 	            {
 	                case NPC_STATE_IDLE:
+	                	if (pressed)
+	                	{
+	                		if (  System.currentTimeMillis() - timer2 > NPC_FACING_TIME)
+	                		{
+	                			npc3State = NPC_STATE_FACING_RIGHT;
+	                			NPC3_previous_State = NPC_STATE_FACING_TOP;
+	                			isFacingTop = false;
+	                			isFacingRight2 = true;
+	                			timer2 = System.currentTimeMillis();}
+	                		}
 	                    break;
 
 	                case NPC_STATE_FACING_TOP:	                	
@@ -1406,6 +1435,16 @@ public class Game1  extends SurfaceView implements SurfaceHolder.Callback {
 			 switch (npc5State)
 	            {
 	                case NPC_STATE_IDLE:
+	                	if (pressed)
+	                	{
+	                		if (  System.currentTimeMillis() - timer3 > NPC_FACING_TIME)
+	                		{
+	                			npc5State = NPC_STATE_FACING_RIGHT;
+		        				isFacingRight3 = true;
+		        				isFacingTop2 = false;
+		        				timer3 = System.currentTimeMillis();
+	                		}
+	                	}
 	                    break;
 	                    
 	                case NPC_STATE_FACING_TOP:	                	
