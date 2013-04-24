@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package com.estudo.android;
+package com.androidgame;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

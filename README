@@ -21,10 +21,16 @@ Projetos:
 	Necessario VS 2008 e XNA
 	Status: Concluído
 
--Estudo Android
+-Android Game
 	Linguagem: Java
 	Projeto desenvolvido para o curso de Jogos Digitais na Unicsul.
 	Status: em processo de conclusão.
+	ToDo:
+		- Pause State
+		- Adicionar Botao Pause
+		- Ligar/Desligar Audio
+		- Fix Bugs movimentação
+		- Colisões
 	
 -Projeto Magnus
 	Linguagem: C# Script - Unity 3D

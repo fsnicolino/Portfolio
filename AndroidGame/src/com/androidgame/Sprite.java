@@ -5,7 +5,7 @@
 // skype: fsnicolino                                  // 
 // telefone para contato: 11 99409-2988               //
 ////////////////////////////////////////////////////////
-package com.estudo.android;
+package com.androidgame;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 

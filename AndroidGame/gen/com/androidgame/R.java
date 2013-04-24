@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.estudo.android;
+package com.androidgame;
 
 public final class R {
     public static final class attr {
@@ -54,13 +54,15 @@ public final class R {
         public static final int wall=0x7f02001e;
     }
     public static final class id {
-        public static final int action_settings=0x7f090000;
+        public static final int action_settings=0x7f090002;
+        public static final int imageButton2=0x7f090000;
+        public static final int pauseButton=0x7f090001;
     }
     public static final class layout {
-        public static final int activity_estudo_android=0x7f030000;
+        public static final int activity_android_game=0x7f030000;
     }
     public static final class menu {
-        public static final int estudo_android=0x7f080000;
+        public static final int android_game=0x7f080000;
     }
     public static final class raw {
         public static final int atencao=0x7f040000;
