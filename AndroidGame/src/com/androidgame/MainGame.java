@@ -37,6 +37,8 @@ public class MainGame extends SurfaceView implements SurfaceHolder.Callback  {
 
 	private GameThread gameThread;
 	
+	private Collisions cCollision;
+	
 	
 	//booleans
 	private boolean Start;
@@ -137,6 +139,11 @@ public class MainGame extends SurfaceView implements SurfaceHolder.Callback  {
 		screenWidth = display.widthPixels;
 		
 		beginRun();
+		
+		if(cCollision == null)
+		{
+			cCollision = new Collisions();
+		}
 		
 
 		if (audioBg == null)
@@ -457,26 +464,24 @@ public class MainGame extends SurfaceView implements SurfaceHolder.Callback  {
 		mNpc6.ResetEnemy(context, R.drawable.npc4r, CONSTANTS.NPC_STATE_IDLE, true, CONSTANTS.NPC_STATE_FACING_RIGHT, false, false, true);
 		mNpc6.ResetFoView(context, R.drawable.npcfov4);
 		
-		mNpc6.SetNpcPosition(0, wallTop.getHeight() + ( 2 * mNpc6.GetHeight()));
-		
+		mNpc6.SetNpcPosition(0, wallTop.getHeight() + ( 3 * mNpc6.GetHeight()));
+				
 		mNpc7.ResetEnemy(context, R.drawable.npc4r, CONSTANTS.NPC_STATE_IDLE, true, CONSTANTS.NPC_STATE_FACING_RIGHT, false, false, true);
 		mNpc7.ResetFoView(context, R.drawable.npcfov4);
 		
 		mNpc7.SetNpcPosition(0, mNpc5.GetPositionY() + ( 2 * mNpc7.GetHeight()));
-		
+				
 		mNpc8.ResetEnemy(context, R.drawable.npc4l, CONSTANTS.NPC_STATE_IDLE, true, CONSTANTS.NPC_STATE_FACING_LEFT, false, false, true);
 		mNpc8.ResetFoView(context, R.drawable.npcfov4);
 		
-		mNpc8.SetNpcPosition(screenWidth - mNpc8.GetWidth(), wallTop.getHeight() + ( 2 * mNpc8.GetHeight()));
-		
-		mNpc8.SetWalkLeft(true);
+		mNpc8.SetNpcPosition(screenWidth - mNpc8.GetWidth(), wallTop.getHeight() + ( 5 * mNpc8.GetHeight()));
 		
 		mNpc9.ResetEnemy(context, R.drawable.npc4l, CONSTANTS.NPC_STATE_IDLE, true, CONSTANTS.NPC_STATE_FACING_LEFT, false, false, true);
 		mNpc9.ResetFoView(context, R.drawable.npcfov4);
 		
-		mNpc9.SetNpcPosition(screenWidth - mNpc9.GetWidth(), mNpc5.GetPositionY() + ( 2 * mNpc9.GetHeight()));
+		mNpc9.SetNpcPosition(screenWidth - mNpc9.GetWidth(), mNpc5.GetPositionY() + ( 4 * mNpc9.GetHeight()));
+				
 		
-		mNpc9.SetWalkLeft(true);
 		
 	}
 		
@@ -865,17 +870,17 @@ public class MainGame extends SurfaceView implements SurfaceHolder.Callback  {
 							 mNpc9.UpdateNpc();
 						
 						//Collisions
-							if (mPlayer.IsColliding(exit))
-						        {
-						        	audioSfx.playFromRes(getResources().openRawResourceFd(R.raw.finish));
-						        	mPlayer.ResetPlayer(context);
-						        }
+						 if (cCollision.IsColliding(mPlayer,exit))
+						 {
+							audioSfx.playFromRes(getResources().openRawResourceFd(R.raw.finish));
+						   	mPlayer.ResetPlayer(context);
+						 }
 						        
-						        if (mPlayer.IsColliding(wallBottom))
-						        {
-						        	mPlayer.SetPosition(mPlayer.GetPositionX(), mPlayer.GetPositionY() - wallBottom.getHeight());
-						        }
-						        
+						 if (cCollision.IsColliding(mPlayer, wallBottom))
+						 {
+						  	mPlayer.SetPosition(mPlayer.GetPositionX(), mPlayer.GetPositionY() - wallBottom.getHeight());
+						 }					 
+											        
 						    
 						       
 						}
@@ -926,9 +931,5 @@ public class MainGame extends SurfaceView implements SurfaceHolder.Callback  {
 			return isPaused;
 		}
 		
-		public float GetWallPositionY()
-		{
-			return wallTop.getPositionY();
-		}
-		
+				
 }

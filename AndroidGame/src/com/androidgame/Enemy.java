@@ -14,16 +14,16 @@ public class Enemy
 	
 	private int currentState;
 	
-	private boolean isWalkingLeft = false;
+	private boolean isWalkingLeft;
 	private boolean isNpcIdle = true;
 	private boolean dWalk;
 	
 	private boolean facesTop;
 	private boolean facesDown;
-	private boolean isFacingLeft = false;
-	private boolean isFacingRight = false;
-	private boolean isFacingBottom = false;
-	private boolean isFacingTop = false;
+	private boolean isFacingLeft;
+	private boolean isFacingRight;
+	private boolean isFacingBottom;
+	private boolean isFacingTop;
 	
 	
 		
@@ -210,6 +210,7 @@ public class Enemy
 			sFoView.setPosition(GetPositionX(), GetPositionY() - sFoView.getHeight());
 		}
 		
+		
 		if (!dWalk)
 		{
 			switch (currentState)
@@ -395,28 +396,22 @@ public class Enemy
 			if (isWalkingLeft)
 			{
 				sEnemy.setPosition(GetPositionX() - NPC_VELOCITY, sEnemy.getPositionY()); 
-            	sFoView.setPosition(GetPositionX() - GetWidth(), sFoView.getPositionY());
-    			    			
-    			if (GetPositionX()  >= screenWidth - GetWidth())
-    			{
-    				isWalkingLeft = false;
-    			}    			
-			}			
+            	sFoView.setPosition(GetPositionX() - sFoView.getWidth(), sFoView.getPositionY());    
+            	if(GetPositionX() <= 0)
+        			SetWalkLeft(false);       		
+        	}			
 			else if (!isWalkingLeft)
 			{
 				sEnemy.setPosition(GetPositionX() + NPC_VELOCITY, sEnemy.getPositionY()); 
             	sFoView.setPosition(GetPositionX() + GetWidth(), sFoView.getPositionY());
             	
-    			if (GetPositionX() <= 0)
-    			{
-    				isWalkingLeft = true;    				
-    			}	                           
-				
-			}
+            	if (GetPositionX() >= screenWidth - GetWidth())
+        			SetWalkLeft(true);            	
+            }
 		}
 		
-	}
-
+	}	
+	
 	public void SetIdle(boolean idle) 
 	{
 		isNpcIdle = idle;		

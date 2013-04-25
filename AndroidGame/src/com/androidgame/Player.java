@@ -29,8 +29,6 @@ public class Player
 	
 	float PLAYER_START_POSITION;
 	
-	private Collisions collide = new Collisions();
-	
 	public Player(Context context) 
 	{
 		if (sPlayer == null)
@@ -49,8 +47,8 @@ public class Player
 		PLAYER_VELOCITY = (screenHeight / 100) * 3;
 		
 		PLAYER_START_POSITION1 = sPlayer.getWidth() * 2;
-		  PLAYER_START_POSITION2 = (screenWidth / 2) - sPlayer.getWidth();
-		  PLAYER_START_POSITION3 = screenWidth - sPlayer.getWidth();
+		PLAYER_START_POSITION2 = (screenWidth / 2) - sPlayer.getWidth();
+		PLAYER_START_POSITION3 = screenWidth - sPlayer.getWidth();
 		
 	}
 
@@ -144,11 +142,5 @@ public class Player
 	{
 		sPlayer.draw(canvas);		
 	}
-
-	public boolean IsColliding(Sprite sB) 
-	{
-		
-		return collide.IsColliding(sPlayer, sB);
-	}
-		 
+			 
 }
