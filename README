@@ -24,21 +24,22 @@ Projetos:
 -Android Game
 	Linguagem: Java
 	Projeto desenvolvido para o curso de Jogos Digitais na Unicsul.
-	Status: em processo de conclusão.
+	Status: em desenvolvimento.
 	ToDo:
 		- Pause State
 		- Adicionar Botao Pause
 		- Ligar/Desligar Audio
 		- Fix Bugs movimentação
-		- Colisões
+		- Melhorias implementação de inimigos
+		- Compilação apk
+		- Atualização Thread e suporte a Android 4.X
 	
 -Projeto Magnus
 	Linguagem: C# Script - Unity 3D
 	Protótipo de jogo desenvolvido como projeto final para o curso de Jogos Digitais da Unicsul. 
-	Desenvolvido em Unity 3D na linguagem C#.
 	Status: concluído.
 	
 -Projetos Futuros:
 
-- Estudo C++ com Cocos2d-x
-- Estudo JavaScript/HTML5
+- C++ com Cocos2d-x
+- JavaScript/HTML5
